@@ -16,3 +16,13 @@
     color: green;
     font-weight: bold;
 }
+/* ANIMAÇÕES GAMIFICADAS */
+.badge-earned {
+    animation: pulse 0.5s infinite;
+    color: gold;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
