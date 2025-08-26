@@ -1,0 +1,488 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Heróis - CRUD Gamificado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #22c55e;    /* VERDE */
+            --secondary: #15803d;  /* VERDE ESCURO */
+            --accent: #eab308;     /* AMARELO */
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #1e3a3a, #2d4d4d);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+        
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(34, 197, 94, 0.15);
+            color: white;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .form-group select option {
+            background: #1e293b;
+            color: white;
+            padding: 10px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        th {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent);
+        }
+        
+        tr:hover {
+            background: rgba(34, 197, 94, 0.05);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-primary {
+            background: var(--primary);
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .badge-success {
+            background: var(--success);
+        }
+        
+        .badge-danger {
+            background: var(--danger);
+        }
+        
+        .level-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Academia de Heróis</h1>
+            </div>
+            <p>Sistema CRUD Gamificado - Gerencie seus heróis e missões</p>
+        </header>
+        
+        <div class="alert" id="alert"></div>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h2><i class="fas fa-plus-circle"></i> Cadastrar Novo Herói</h2>
+                <form id="heroForm">
+                    <div class="form-group">
+                        <label for="heroName">Nome do Herói</label>
+                        <input type="text" id="heroName" required placeholder="Ex: Capitão Souza">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroClass">Classe</label>
+                        <select id="heroClass" required>
+                            <option value="">Selecione uma classe</option>
+                            <option value="Guerreiro">Guerreiro</option>
+                            <option value="Mago">Mago</option>
+                            <option value="Arqueiro">Arqueiro</option>
+                            <option value="Ladino">Ladino</option>
+                            <option value="Curandeiro">Curandeiro</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar Herói</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-trophy"></i> Ranking de Heróis</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="totalHeroes">0</div>
+                        <div class="stat-label">Heróis</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="topLevel">0</div>
+                        <div class="stat-label">Maior Nível</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="topExp">0</div>
+                        <div class="stat-label">Maior EXP</div>
+                    </div>
+                </div>
+                <div id="rankingList">
+                    <p>Carregando ranking...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2><i class="fas fa-users"></i> Lista de Heróis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Classe</th>
+                        <th>Nível</th>
+                        <th>EXP</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="heroesList">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Carregando heróis...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let heroes = [];
+        
+        // Mostrar alerta
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Carregar heróis
+        async function loadHeroes() {
+            try {
+                const response = await fetch('/api/heroes');
+                heroes = await response.json();
+                displayHeroes();
+                updateRanking();
+            } catch (error) {
+                console.error('Erro ao carregar heróis:', error);
+            }
+        }
+        
+        // Exibir heróis na tabela
+        function displayHeroes() {
+            const tbody = document.getElementById('heroesList');
+            tbody.innerHTML = '';
+            
+            if (heroes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum herói cadastrado</td></tr>';
+                return;
+            }
+            
+            heroes.forEach(hero => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${hero.id}</td>
+                    <td>${hero.name}</td>
+                    <td><span class="badge badge-primary">${hero.class}</span></td>
+                    <td><span class="level-display">${hero.level}</span></td>
+                    <td>${hero.experience} XP</td>
+                    <td>
+                        <button class="btn btn-success" onclick="addExperience(${hero.id}, 100)">+100 XP</button>
+                        <button class="btn btn-danger" onclick="deleteHero(${hero.id})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Atualizar ranking
+        function updateRanking() {
+            document.getElementById('totalHeroes').textContent = heroes.length;
+            
+            if (heroes.length > 0) {
+                const topLevel = Math.max(...heroes.map(h => h.level));
+                const topExp = Math.max(...heroes.map(h => h.experience));
+                
+                document.getElementById('topLevel').textContent = topLevel;
+                document.getElementById('topExp').textContent = topExp;
+                
+                // Ordenar por experiência
+                const sorted = [...heroes].sort((a, b) => b.experience - a.experience);
+                
+                let rankingHTML = '<ol>';
+                sorted.slice(0, 5).forEach((hero, index) => {
+                    rankingHTML += `
+                        <li>${hero.name} - ${hero.experience} XP (Nível ${hero.level})</li>
+                    `;
+                });
+                rankingHTML += '</ol>';
+                
+                document.getElementById('rankingList').innerHTML = rankingHTML;
+            }
+        }
+        
+        // Cadastrar novo herói
+        async function addHero(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('heroName').value;
+            const heroClass = document.getElementById('heroClass').value;
+            
+            try {
+                const response = await fetch('/api/heroes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, class: heroClass })
+                });
+                
+                if (response.ok) {
+                    showAlert('Herói cadastrado com sucesso!', 'success');
+                    document.getElementById('heroForm').reset();
+                    loadHeroes();
+                }
+            } catch (error) {
+                showAlert('Erro ao cadastrar herói', 'error');
+                console.error(error);
+            }
+        }
+        
+        // Adicionar experiência
+        async function addExperience(heroId, xp) {
+            try {
+                const hero = heroes.find(h => h.id === heroId);
+                const newExp = hero.experience + xp;
+                const newLevel = Math.floor(newExp / 100) + 1;
+                
+                const response = await fetch(`/api/heroes/${heroId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: hero.name,
+                        class: hero.class,
+                        experience: newExp,
+                        level: newLevel
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert(`${xp} XP adicionados para ${hero.name}!`, 'success');
+                    loadHeroes();
+                }
+            } catch (error) {
+                showAlert('Erro ao adicionar experiência', 'error');
+                console.error(error);
+            }
+        }
+        
+        // Deletar herói
+        async function deleteHero(heroId) {
+            if (confirm('Tem certeza que deseja excluir este herói?')) {
+                try {
+                    const response = await fetch(`/api/heroes/${heroId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showAlert('Herói excluído com sucesso!', 'success');
+                        loadHeroes();
+                    }
+                } catch (error) {
+                    showAlert('Erro ao excluir herói', 'error');
+                    console.error(error);
+                }
+            }
+        }
+        
+        // Inicializar
+        document.getElementById('heroForm').addEventListener('submit', addHero);
+        loadHeroes();
+    </script>
+</body>
+</html>
