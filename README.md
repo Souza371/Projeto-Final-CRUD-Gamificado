@@ -1,6 +1,6 @@
 # Projeto-Final-CRUD-Gamificado
 # Criar um README.md bonito
-@'
+
 # 🎮 Academia de Heróis - CRUD Gamificado
 
 Sistema completo de CRUD com elementos de gamificação desenvolvido em Node.js + Express.
