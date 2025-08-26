@@ -57,7 +57,7 @@ node server.js
 ## 👨‍💻 Desenvolvido por
 
 Seu Nome - [GitHub](https://github.com/Souza371)
-'@ | Set-Content -Path README.md -Encoding UTF8
+https://github.com/Souza371
 
 # Adicionar ao git
 git add README.md
