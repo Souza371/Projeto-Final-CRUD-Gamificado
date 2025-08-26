@@ -1,5 +1,4 @@
 # Projeto-Final-CRUD-Gamificado
-# Criar um README.md bonito
 
 # 🎮 Academia de Heróis - CRUD Gamificado
 
