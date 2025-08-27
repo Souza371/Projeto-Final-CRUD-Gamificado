@@ -1,0 +1,547 @@
+// Variáveis SCSS para o sistema gamificado
+$primary-color: #2563eb;
+$secondary-color: #1e40af;
+$accent-color: #f59e0b;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$light-color: #f8fafc;
+$dark-color: #1e293b;
+
+// Mixins úteis
+@mixin button-style($bg-color, $hover-color: darken($bg-color, 10%)) {
+    background: linear-gradient(45deg, $bg-color, darken($bg-color, 5%));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba($bg-color, 0.3);
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($bg-color, 0.4);
+        background: linear-gradient(45deg, $hover-color, darken($hover-color, 5%));
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+@mixin card-style {
+    background: rgba($primary-color, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba($primary-color, 0.2);
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border-color: rgba($primary-color, 0.4);
+    }
+}
+
+@mixin responsive-grid($mobile: 1fr, $tablet: 1fr 1fr, $desktop: 1fr 1fr 1fr) {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: $mobile;
+    
+    @media (min-width: 768px) {
+        grid-template-columns: $tablet;
+    }
+    
+    @media (min-width: 1024px) {
+        grid-template-columns: $desktop;
+    }
+}
+
+// Animações
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba($accent-color, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba($accent-color, 0.8);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+// Classes utilitárias
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s ease-out;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+.glow-effect {
+    animation: glow 2s infinite;
+}
+
+// Estilos específicos para o sistema gamificado
+.hero-card {
+    @include card-style;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    &:hover::before {
+        left: 100%;
+    }
+    
+    .hero-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, $accent-color, $primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 15px;
+    }
+    
+    .hero-level {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: $accent-color;
+        color: $dark-color;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: 700;
+        font-size: 0.8rem;
+    }
+    
+    .hero-progress {
+        width: 100%;
+        height: 8px;
+        background: rgba($primary-color, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 10px;
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, $accent-color, $primary-color);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    }
+}
+
+.mission-card {
+    @include card-style;
+    border-left: 4px solid $accent-color;
+    
+    &.completed {
+        border-left-color: $success-color;
+        opacity: 0.7;
+        
+        .mission-title {
+            text-decoration: line-through;
+        }
+    }
+    
+    &.daily {
+        border-left-color: $warning-color;
+        
+        &::after {
+            content: '⏰';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+        }
+    }
+    
+    .mission-difficulty {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        
+        &.easy { background: $success-color; }
+        &.normal { background: $primary-color; }
+        &.hard { background: $warning-color; color: $dark-color; }
+        &.epic { background: $danger-color; }
+    }
+    
+    .mission-rewards {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        
+        .reward {
+            background: rgba($accent-color, 0.2);
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    }
+}
+
+.achievement-badge {
+    @include card-style;
+    text-align: center;
+    padding: 15px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    
+    &.earned {
+        border-color: $accent-color;
+        background: rgba($accent-color, 0.1);
+        
+        .achievement-icon {
+            animation: pulse 1s infinite;
+        }
+    }
+    
+    &.locked {
+        opacity: 0.5;
+        filter: grayscale(100%);
+    }
+    
+    .achievement-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .achievement-name {
+        font-weight: 700;
+        color: $accent-color;
+        margin-bottom: 5px;
+    }
+    
+    .achievement-description {
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+}
+
+.stats-grid {
+    @include responsive-grid(1fr, 1fr 1fr, 1fr 1fr 1fr 1fr);
+    margin: 20px 0;
+    
+    .stat-card {
+        @include card-style;
+        text-align: center;
+        padding: 20px;
+        
+        .stat-icon {
+            font-size: 2rem;
+            color: $accent-color;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: $accent-color;
+            text-shadow: 0 0 10px rgba($accent-color, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+    }
+}
+
+.ranking-list {
+    .ranking-item {
+        @include card-style;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        margin-bottom: 10px;
+        
+        &:nth-child(1) {
+            border-left: 4px solid gold;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        &:nth-child(2) {
+            border-left: 4px solid silver;
+            background: rgba(192, 192, 192, 0.1);
+        }
+        
+        &:nth-child(3) {
+            border-left: 4px solid #cd7f32;
+            background: rgba(205, 127, 50, 0.1);
+        }
+        
+        .ranking-position {
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-width: 40px;
+        }
+        
+        .ranking-info {
+            flex: 1;
+            margin-left: 15px;
+            
+            .hero-name {
+                font-weight: 600;
+                color: $accent-color;
+            }
+            
+            .hero-class {
+                font-size: 0.8rem;
+                opacity: 0.8;
+            }
+        }
+        
+        .ranking-stats {
+            text-align: right;
+            
+            .points {
+                font-weight: 700;
+                color: $accent-color;
+            }
+            
+            .level-xp {
+                font-size: 0.8rem;
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+// Responsividade avançada
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .hero-card {
+        padding: 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+        
+        .btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .logo h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 20px;
+        min-width: auto;
+        max-width: calc(100vw - 40px);
+    }
+}
+
+// Modo escuro (opcional)
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light: #1e293b;
+        --dark: #f8fafc;
+    }
+    
+    body {
+        background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
+                    url('heroes_background.webp') center/cover no-repeat fixed;
+    }
+}
+
+// Efeitos especiais para elementos interativos
+.interactive-element {
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+    }
+    
+    &:active::after {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+// Indicadores de loading
+.loading {
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba($primary-color, 0.1);
+        border-radius: inherit;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid $accent-color;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+// Tooltips
+.tooltip {
+    position: relative;
+    
+    &::before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: $dark-color;
+        color: $light-color;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+    
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: $dark-color;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+    }
+    
+    &:hover::before,
+    &:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+

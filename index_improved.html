@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Heróis - CRUD Gamificado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2563eb;      /* Azul profissional */
+            --secondary: #1e40af;    /* Azul escuro */
+            --accent: #f59e0b;       /* Dourado elegante */
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background-overlay: rgba(30, 41, 59, 0.85);
+        }
+        
+        body {
+            background: linear-gradient(rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.9)), 
+                        url('heroes_background.webp') center/cover no-repeat fixed;
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(37, 99, 235, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 3rem;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+        
+        .logo h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border-color: rgba(37, 99, 235, 0.4);
+        }
+        
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 1rem;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(37, 99, 235, 0.15);
+            color: white;
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+        
+        .form-group select option {
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, var(--danger), #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-edit {
+            background: linear-gradient(45deg, var(--warning), #d97706);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+        }
+        
+        th {
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        tr:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .badge-warning {
+            background: linear-gradient(45deg, var(--warning), #d97706);
+            color: white;
+        }
+        
+        .badge-success {
+            background: linear-gradient(45deg, var(--success), #059669);
+            color: white;
+        }
+        
+        .badge-danger {
+            background: linear-gradient(45deg, var(--danger), #dc2626);
+            color: white;
+        }
+        
+        .level-display {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 15px;
+            flex: 1;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid var(--success);
+            color: #10b981;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+            color: #ef4444;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .hero-points {
+            display: inline-block;
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .ranking-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .ranking-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .ranking-list::-webkit-scrollbar-track {
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 3px;
+        }
+        
+        .ranking-list::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .ranking-position {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.2rem;
+            min-width: 30px;
+        }
+        
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 41, 59, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(37, 99, 235, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            min-width: 400px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .close-modal:hover {
+            color: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="slide-in">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Academia de Heróis</h1>
+            </div>
+            <p class="subtitle">Sistema CRUD Gamificado - Gerencie seus heróis e conquiste missões épicas</p>
+        </header>
+        
+        <div class="alert" id="alert"></div>
+        
+        <div class="dashboard">
+            <div class="card slide-in">
+                <h2><i class="fas fa-plus-circle"></i> Cadastrar Novo Herói</h2>
+                <form id="heroForm">
+                    <div class="form-group">
+                        <label for="heroName">Nome do Herói</label>
+                        <input type="text" id="heroName" required placeholder="Ex: Capitão Souza">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroClass">Classe</label>
+                        <select id="heroClass" required>
+                            <option value="">Selecione uma classe</option>
+                            <option value="Guerreiro">⚔️ Guerreiro</option>
+                            <option value="Mago">🔮 Mago</option>
+                            <option value="Arqueiro">🏹 Arqueiro</option>
+                            <option value="Ladino">🗡️ Ladino</option>
+                            <option value="Curandeiro">✨ Curandeiro</option>
+                            <option value="Paladino">🛡️ Paladino</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Cadastrar Herói
+                    </button>
+                </form>
+            </div>
+            
+            <div class="card slide-in">
+                <h2><i class="fas fa-trophy"></i> Ranking de Heróis</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="totalHeroes">0</div>
+                        <div class="stat-label">Heróis</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="topLevel">0</div>
+                        <div class="stat-label">Maior Nível</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="topExp">0</div>
+                        <div class="stat-label">Maior EXP</div>
+                    </div>
+                </div>
+                <div class="ranking-list" id="rankingList">
+                    <p>Carregando ranking...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card slide-in">
+            <h2><i class="fas fa-users"></i> Lista de Heróis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Classe</th>
+                        <th>Nível</th>
+                        <th>EXP</th>
+                        <th>Pontos</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="heroesList">
+                    <tr>
+                        <td colspan="7" style="text-align: center;">Carregando heróis...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="edit-modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Editar Herói</h3>
+                <button class="close-modal" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editHeroId">
+                <div class="form-group">
+                    <label for="editHeroName">Nome do Herói</label>
+                    <input type="text" id="editHeroName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editHeroClass">Classe</label>
+                    <select id="editHeroClass" required>
+                        <option value="Guerreiro">⚔️ Guerreiro</option>
+                        <option value="Mago">🔮 Mago</option>
+                        <option value="Arqueiro">🏹 Arqueiro</option>
+                        <option value="Ladino">🗡️ Ladino</option>
+                        <option value="Curandeiro">✨ Curandeiro</option>
+                        <option value="Paladino">🛡️ Paladino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editHeroPoints">Pontos</label>
+                    <input type="number" id="editHeroPoints" min="0" required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger" onclick="closeEditModal()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let heroes = [];
+        
+        // Mostrar alerta
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
+            alert.style.display = 'block';
+            alert.classList.add('slide-in');
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+                alert.classList.remove('slide-in');
+            }, 4000);
+        }
+        
+        // Carregar heróis
+        async function loadHeroes() {
+            try {
+                const response = await fetch('/api/heroes');
+                if (response.ok) {
+                    heroes = await response.json();
+                    displayHeroes();
+                    updateRanking();
+                } else {
+                    console.error('Erro ao carregar heróis:', response.status);
+                    // Carregar dados do localStorage como fallback
+                    loadFromLocalStorage();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar heróis:', error);
+                // Carregar dados do localStorage como fallback
+                loadFromLocalStorage();
+            }
+        }
+        
+        // Carregar do localStorage
+        function loadFromLocalStorage() {
+            const savedHeroes = localStorage.getItem('heroes');
+            if (savedHeroes) {
+                heroes = JSON.parse(savedHeroes);
+                displayHeroes();
+                updateRanking();
+            }
+        }
+        
+        // Salvar no localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('heroes', JSON.stringify(heroes));
+        }
+        
+        // Exibir heróis na tabela
+        function displayHeroes() {
+            const tbody = document.getElementById('heroesList');
+            tbody.innerHTML = '';
+            
+            if (heroes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum herói cadastrado</td></tr>';
+                return;
+            }
+            
+            heroes.forEach(hero => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${hero.id}</td>
+                    <td>${hero.name}</td>
+                    <td><span class="badge badge-primary">${hero.class}</span></td>
+                    <td><span class="level-display">${hero.level}</span></td>
+                    <td>${hero.experience} XP</td>
+                    <td>${hero.points || 0}<span class="hero-points">pts</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-success" onclick="addExperience(${hero.id}, 100)">
+                                <i class="fas fa-plus"></i> +100 XP
+                            </button>
+                            <button class="btn btn-edit" onclick="openEditModal(${hero.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteHero(${hero.id})">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Atualizar ranking
+        function updateRanking() {
+            document.getElementById('totalHeroes').textContent = heroes.length;
+            
+            if (heroes.length > 0) {
+                const topLevel = Math.max(...heroes.map(h => h.level));
+                const topExp = Math.max(...heroes.map(h => h.experience));
+                
+                document.getElementById('topLevel').textContent = topLevel;
+                document.getElementById('topExp').textContent = topExp;
+                
+                // Ordenar por pontos e experiência
+                const sorted = [...heroes].sort((a, b) => {
+                    const pointsA = a.points || 0;
+                    const pointsB = b.points || 0;
+                    if (pointsA !== pointsB) return pointsB - pointsA;
+                    return b.experience - a.experience;
+                });
+                
+                let rankingHTML = '';
+                sorted.slice(0, 5).forEach((hero, index) => {
+                    const position = index + 1;
+                    const medal = position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : `${position}º`;
+                    rankingHTML += `
+                        <div class="ranking-item">
+                            <div>
+                                <span class="ranking-position">${medal}</span>
+                                <strong>${hero.name}</strong>
+                                <span class="badge badge-primary">${hero.class}</span>
+                            </div>
+                            <div>
+                                ${hero.points || 0} pts | ${hero.experience} XP | Nv.${hero.level}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('rankingList').innerHTML = rankingHTML || '<p>Nenhum herói no ranking</p>';
+            }
+        }
+        
+        // Cadastrar novo herói
+        async function addHero(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('heroName').value;
+            const heroClass = document.getElementById('heroClass').value;
+            
+            const newHero = {
+                id: Date.now(),
+                name,
+                class: heroClass,
+                experience: 0,
+                level: 1,
+                points: 0
+            };
+            
+            try {
+                const response = await fetch('/api/heroes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newHero)
+                });
+                
+                if (response.ok) {
+                    heroes.push(newHero);
+                    saveToLocalStorage();
+                    showAlert('Herói cadastrado com sucesso!', 'success');
+                    document.getElementById('heroForm').reset();
+                    displayHeroes();
+                    updateRanking();
+                } else {
+                    throw new Error('Erro no servidor');
+                }
+            } catch (error) {
+                // Fallback para localStorage
+                heroes.push(newHero);
+                saveToLocalStorage();
+                showAlert('Herói cadastrado com sucesso! (Salvo localmente)', 'success');
+                document.getElementById('heroForm').reset();
+                displayHeroes();
+                updateRanking();
+            }
+        }
+        
+        // Adicionar experiência
+        async function addExperience(heroId, xp) {
+            const heroIndex = heroes.findIndex(h => h.id === heroId);
+            if (heroIndex === -1) return;
+            
+            const hero = heroes[heroIndex];
+            const newExp = hero.experience + xp;
+            const newLevel = Math.floor(newExp / 100) + 1;
+            const pointsGained = Math.floor(xp / 10);
+            
+            heroes[heroIndex] = {
+                ...hero,
+                experience: newExp,
+                level: newLevel,
+                points: (hero.points || 0) + pointsGained
+            };
+            
+            try {
+                const response = await fetch(`/api/heroes/${heroId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(heroes[heroIndex])
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro no servidor');
+                }
+            } catch (error) {
+                console.log('Salvando localmente devido a erro no servidor');
+            }
+            
+            saveToLocalStorage();
+            showAlert(`${xp} XP e ${pointsGained} pontos adicionados para ${hero.name}!`, 'success');
+            displayHeroes();
+            updateRanking();
+            
+            // Efeito visual
+            const button = event.target;
+            button.classList.add('pulse');
+            setTimeout(() => button.classList.remove('pulse'), 500);
+        }
+        
+        // Abrir modal de edição
+        function openEditModal(heroId) {
+            const hero = heroes.find(h => h.id === heroId);
+            if (!hero) return;
+            
+            document.getElementById('editHeroId').value = hero.id;
+            document.getElementById('editHeroName').value = hero.name;
+            document.getElementById('editHeroClass').value = hero.class;
+            document.getElementById('editHeroPoints').value = hero.points || 0;
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+        
+        // Fechar modal de edição
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Salvar edição
+        async function saveEdit(event) {
+            event.preventDefault();
+            
+            const heroId = parseInt(document.getElementById('editHeroId').value);
+            const name = document.getElementById('editHeroName').value;
+            const heroClass = document.getElementById('editHeroClass').value;
+            const points = parseInt(document.getElementById('editHeroPoints').value);
+            
+            const heroIndex = heroes.findIndex(h => h.id === heroId);
+            if (heroIndex === -1) return;
+            
+            heroes[heroIndex] = {
+                ...heroes[heroIndex],
+                name,
+                class: heroClass,
+                points
+            };
+            
+            try {
+                const response = await fetch(`/api/heroes/${heroId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(heroes[heroIndex])
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro no servidor');
+                }
+            } catch (error) {
+                console.log('Salvando localmente devido a erro no servidor');
+            }
+            
+            saveToLocalStorage();
+            showAlert('Herói editado com sucesso!', 'success');
+            closeEditModal();
+            displayHeroes();
+            updateRanking();
+        }
+        
+        // Deletar herói
+        async function deleteHero(heroId) {
+            if (!confirm('Tem certeza que deseja excluir este herói?')) return;
+            
+            try {
+                const response = await fetch(`/api/heroes/${heroId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erro no servidor');
+                }
+            } catch (error) {
+                console.log('Removendo localmente devido a erro no servidor');
+            }
+            
+            heroes = heroes.filter(h => h.id !== heroId);
+            saveToLocalStorage();
+            showAlert('Herói excluído com sucesso!', 'success');
+            displayHeroes();
+            updateRanking();
+        }
+        
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+        
+        // Inicializar
+        document.getElementById('heroForm').addEventListener('submit', addHero);
+        document.getElementById('editForm').addEventListener('submit', saveEdit);
+        
+        // Carregar dados ao iniciar
+        loadHeroes();
+        
+        // Adicionar animações aos elementos quando carregam
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('slide-in');
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
+
