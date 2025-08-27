@@ -1,9 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- Meta tags de acessibilidade -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema CRUD Gamificado</title>
@@ -402,40 +399,10 @@
                 gap: 15px;
             }
         }
-    /* Estilos para acessibilidade */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #000;
-    color: white;
-    padding: 8px;
-    z-index: 100;
-    transition: top 0.3s;
-}
-
-.skip-link:focus {
-    top: 0;
-}
-
-.btn:focus,
-.form-control:focus {
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-</style>
+    </style>
 </head>
 <body>
-<!-- Skip link para acessibilidade -->
-<a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
-    <main id="main-content" class="container" tabindex="-1">
+    <div class="container">
         <header>
             <div class="header-left">
                 <div class="user-avatar" id="user-avatar">V</div>
@@ -876,5 +843,4 @@
     </script>
 </body>
 </html>
-
 
