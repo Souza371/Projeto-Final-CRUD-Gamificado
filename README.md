@@ -56,8 +56,8 @@ node server.js
 
 ## 👨‍💻 Desenvolvido por
 
-Seu Nome - [GitHub](https://github.com/Souza371)
-https://github.com/Souza371
+https://github.com/Souza371 - [GitHub](https://github.com/Souza371)
+
 
 # Adicionar ao git
 git add README.md
