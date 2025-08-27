@@ -1,4 +1,12 @@
-﻿import { showMessage, validateItem } from './validations.js';
+﻿
+
+// Sistema de usuários
+const userSystem = new UserSystem();
+window.userSystem = userSystem;
+
+// Sistema de perfil
+const profileSystem = new ProfileSystem();
+window.profileSystem = profileSystem;
 
 // Sistema de conquistas
 const achievements = {
@@ -44,11 +52,13 @@ function saveItem(e) {
     e.preventDefault();
     
     const item = {
-        id: editId || Date.now().toString(),
-        name: itemName.value.trim(),
-        description: itemDescription.value.trim(),
-        points: parseInt(itemPoints.value),
-        date: editId ? new Date().toISOString() : new Date().toISOString()
+    id: editId || Date.now().toString(),
+    name: itemName.value.trim(),
+    description: itemDescription.value.trim(),
+    points: parseInt(itemPoints.value),
+    stars: 0, // Estrelas inicializadas como 0
+    completed: false, // Item não concluído inicialmente
+    date: editId ? new Date().toISOString() : new Date().toISOString()
     };
     
     // Validação
@@ -258,3 +268,107 @@ function resetForm() {
 window.editItem = editItem;
 window.deleteItem = deleteItem;
 
+
+
+// ===== SISTEMA DE ESTRELAS SIMPLIFICADO =====
+function initStarSystem() {
+    // Adicionar coluna de avaliação na tabela
+    const headerRow = document.querySelector('#itemsList tr');
+    if (headerRow && !headerRow.querySelector('th:nth-child(6)')) {
+        const starsHeader = document.createElement('th');
+        starsHeader.textContent = 'Avaliação';
+        headerRow.appendChild(starsHeader);
+    }
+    
+    // Adicionar estrelas para cada item
+    updateStars();
+}
+
+function updateStars() {
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+    const rows = document.querySelectorAll('#itemsList tr');
+    
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Pular header
+        
+        const itemId = row.dataset.id || index;
+        const item = items.find(i => i.id == itemId) || items[index - 1];
+        
+        if (item && !row.querySelector('.stars-cell')) {
+            const starsCell = document.createElement('td');
+            starsCell.className = 'stars-cell';
+            
+            starsCell.innerHTML = \`
+                <div class="stars">
+                    <span class="star" data-value="1" data-item="\${item.id}">\${item.stars >= 1 ? '⭐' : '☆'}</span>
+                    <span class="star" data-value="2" data-item="\${item.id}">\${item.stars >= 2 ? '⭐' : '☆'}</span>
+                    <span class="star" data-value="3" data-item="\${item.id}">\${item.stars >= 3 ? '⭐' : '☆'}</span>
+                    <span class="star" data-value="4" data-item="\${item.id}">\${item.stars >= 4 ? '⭐' : '☆'}</span>
+                    <span class="star" data-value="5" data-item="\${item.id}">\${item.stars >= 5 ? '⭐' : '☆'}</span>
+                </div>
+            \`;
+            
+            row.appendChild(starsCell);
+        }
+    });
+    
+    // Adicionar event listeners para as estrelas
+    document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.dataset.value);
+            const itemId = this.dataset.item;
+            rateItem(itemId, rating);
+        });
+    });
+}
+
+function rateItem(itemId, rating) {
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+    const itemIndex = items.findIndex(item => item.id == itemId);
+    
+    if (itemIndex !== -1) {
+        items[itemIndex].stars = rating;
+        localStorage.setItem('items', JSON.stringify(items));
+        
+        // Atualizar visual
+        updateStars();
+        
+        // Atualizar estatísticas
+        if (window.profileSystem) {
+            profileSystem.updateStats(items);
+        }
+        
+        showMessage('Avaliação salva com sucesso!', 'success');
+    }
+}
+
+// Inicializar sistema de estrelas quando a página carregar
+setTimeout(initStarSystem, 1000);
+
+
+
+// ===== INICIALIZAÇÃO DO SISTEMA =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar sistema de usuários
+    setTimeout(() => {
+        userSystem.updateRanking();
+        userSystem.loadUserSelection();
+    }, 1000);
+
+    // Atualizar ranking a cada 30 segundos
+    setInterval(() => {
+        userSystem.updateRanking();
+    }, 30000);
+});
+
+// Event listener para quando usuário faz login
+window.addEventListener('userLoggedIn', function(e) {
+    const user = e.detail;
+    showMessage(\Bem-vindo, \!\, 'success');
+    
+    // Recarregar itens do usuário
+    loadItems();
+    
+    // Atualizar ranking
+    userSystem.updateRanking();
+});
