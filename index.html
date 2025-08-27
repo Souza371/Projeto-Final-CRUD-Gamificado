@@ -12,31 +12,39 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        body {
-            background-image: url('clean.webp');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #fff;
-            min-height: 100vh;
-            position: relative;
+        :root {
+            --primary: #4ecca3;
+            --secondary: #2b8c6b;
+            --dark: #23233c;
+            --light: #f8f8f8;
+            --danger: #f05945;
+            --warning: #ff9a3c;
+            --info: #3498db;
+            --user-color: #4ecca3;
         }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: -1;
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
             padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         header {
@@ -45,14 +53,45 @@
             padding: 20px;
             background: rgba(45, 52, 75, 0.8);
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #4ecca3;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--user-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
             text-shadow: 0 0 10px rgba(78, 204, 163, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 1rem;
+            color: var(--light);
         }
 
         .gamification-bar {
@@ -70,23 +109,10 @@
             align-items: center;
         }
 
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: #4ecca3;
-            border-radius: 50%;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-
         .level {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #f8f8f8;
+            color: var(--light);
         }
 
         .xp-progress {
@@ -101,15 +127,16 @@
 
         .xp-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #4ecca3, #2b8c6b);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             width: 65%;
             border-radius: 10px;
+            transition: width 0.5s ease;
         }
 
         .points {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #4ecca3;
+            color: var(--primary);
         }
 
         .crud-container {
@@ -119,7 +146,7 @@
             margin-bottom: 30px;
         }
 
-        .form-container {
+        .form-container, .list-container {
             background: rgba(45, 52, 75, 0.9);
             padding: 20px;
             border-radius: 15px;
@@ -127,7 +154,7 @@
         }
 
         h2 {
-            color: #4ecca3;
+            color: var(--primary);
             margin-bottom: 20px;
             text-align: center;
         }
@@ -140,7 +167,7 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #f8f8f8;
+            color: var(--light);
         }
 
         input, select, textarea {
@@ -149,7 +176,7 @@
             border: none;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.9);
-            color: #23233c;
+            color: var(--dark);
             font-size: 1rem;
         }
 
@@ -164,34 +191,25 @@
         }
 
         .btn-primary {
-            background: #4ecca3;
-            color: #23233c;
+            background: var(--primary);
+            color: var(--dark);
         }
 
         .btn-primary:hover {
-            background: #3aa98a;
+            background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         .btn-secondary {
-            background: #f05945;
-            color: #f8f8f8;
+            background: var(--danger);
+            color: var(--light);
         }
 
         .btn-secondary:hover {
             background: #d44a38;
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .list-container {
-            background: rgba(45, 52, 75, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            max-height: 500px;
-            overflow-y: auto;
         }
 
         .filters {
@@ -206,6 +224,8 @@
 
         .item-list {
             list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .item-list li {
@@ -234,17 +254,41 @@
         }
 
         .btn-edit {
-            background: #3498db;
+            background: var(--info);
             color: white;
             padding: 8px 12px;
             font-size: 0.9rem;
         }
 
         .btn-delete {
-            background: #f05945;
+            background: var(--danger);
             color: white;
             padding: 8px 12px;
             font-size: 0.9rem;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .priority-baixa {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .priority-media {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .priority-alta {
+            background: var(--danger);
+            color: white;
         }
 
         .achievements {
@@ -266,7 +310,7 @@
         .badge {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #4ecca3, #2b8c6b);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -289,6 +333,53 @@
             margin-top: 30px;
         }
 
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(78, 204, 163, 0.5);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 10px white;
+        }
+
         @media (max-width: 768px) {
             .crud-container {
                 grid-template-columns: 1fr;
@@ -302,23 +393,32 @@
             .xp-progress {
                 max-width: 100%;
             }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌟 Sistema CRUD Gamificado 🌟</h1>
-            <p>Gerencie seus itens de forma divertida e eficiente!</p>
+            <div class="header-left">
+                <div class="user-avatar" id="user-avatar">V</div>
+                <div class="header-title">
+                    <h1>Sistema CRUD Gamificado</h1>
+                    <p>Gerencie seus itens de forma divertida e eficiente!</p>
+                </div>
+            </div>
         </header>
 
         <div class="gamification-bar">
             <div class="user-info">
-                <div class="avatar">J</div>
                 <div class="level">Nível 5</div>
             </div>
             <div class="xp-progress">
-                <div class="xp-progress-bar"></div>
+                <div class="xp-progress-bar" id="xp-bar"></div>
             </div>
             <div class="points">250 XP</div>
         </div>
@@ -345,12 +445,16 @@
                         <textarea id="description" rows="3" placeholder="Descreva o item"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="priority">Prioridade</label>
+                        <label for="priority">Nível de Prioridade (Prazo)</label>
                         <select id="priority">
-                            <option value="baixa">Baixa</option>
-                            <option value="media">Média</option>
-                            <option value="alta">Alta</option>
+                            <option value="baixa">Baixa (Mais de 15 dias)</option>
+                            <option value="media">Média (Entre 10-15 dias)</option>
+                            <option value="alta">Alta (Menos de 10 dias)</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-notification">Notificação por Email</label>
+                        <input type="email" id="email-notification" placeholder="Seu email para notificações">
                     </div>
                     <button type="submit" class="btn-primary">Salvar Item</button>
                     <button type="reset" class="btn-secondary">Limpar</button>
@@ -363,36 +467,7 @@
                     <input type="text" id="search" placeholder="Buscar itens...">
                 </div>
                 <ul class="item-list" id="item-list">
-                    <li>
-                        <div class="item-info">
-                            <strong>Estudar JavaScript</strong>
-                            <p>Tarefa - Prioridade: Alta</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-edit">Editar</button>
-                            <button class="btn-delete">Excluir</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item-info">
-                            <strong>Finalizar Projeto CRUD</strong>
-                            <p>Desafio - Prioridade: Alta</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-edit">Editar</button>
-                            <button class="btn-delete">Excluir</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="item-info">
-                            <strong>Revisar Documentação</strong>
-                            <p>Tarefa - Prioridade: Média</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-edit">Editar</button>
-                            <button class="btn-delete">Excluir</button>
-                        </div>
-                    </li>
+                    <!-- Itens serão carregados via JavaScript -->
                 </ul>
             </div>
         </div>
@@ -413,29 +488,151 @@
         </footer>
     </div>
 
+    <div class="profile-modal" id="profile-modal">
+        <div class="modal-content">
+            <h2>Configurações de Perfil</h2>
+            <div class="form-group">
+                <label for="user-name">Seu Nome</label>
+                <input type="text" id="user-name" placeholder="Seu nome" value="Vicente">
+            </div>
+            <div class="form-group">
+                <label>Cor do Seu Avatar</label>
+                <div class="color-options">
+                    <div class="color-option selected" style="background: #4ecca3;" data-color="#4ecca3"></div>
+                    <div class="color-option" style="background: #3498db;" data-color="#3498db"></div>
+                    <div class="color-option" style="background: #e74c3c;" data-color="#e74c3c"></div>
+                    <div class="color-option" style="background: #f1c40f;" data-color="#f1c40f"></div>
+                    <div class="color-option" style="background: #9b59b6;" data-color="#9b59b6"></div>
+                    <div class="color-option" style="background: #1abc9c;" data-color="#1abc9c"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="user-email">Email para Notificações</label>
+                <input type="email" id="user-email" placeholder="Seu email">
+            </div>
+            <button type="button" class="btn-primary" id="save-profile">Salvar Configurações</button>
+            <button type="button" class="btn-secondary" id="close-modal">Fechar</button>
+        </div>
+    </div>
+
     <script>
-        // Dados de exemplo
-        let items = [
-            { id: 1, name: "Estudar JavaScript", category: "tarefa", description: "Estudar recursos avançados de JS", priority: "alta" },
-            { id: 2, name: "Finalizar Projeto CRUD", category: "desafio", description: "Completar o projeto final do curso", priority: "alta" },
-            { id: 3, name: "Revisar Documentação", category: "tarefa", description: "Revisar documentação do projeto", priority: "media" }
+        // Dados da aplicação
+        const items = JSON.parse(localStorage.getItem('crudItems')) || [
+            { 
+                id: 1, 
+                name: "Estudar JavaScript", 
+                category: "tarefa", 
+                description: "Estudar recursos avançados de JS", 
+                priority: "alta",
+                dueDate: "2023-12-10"
+            },
+            { 
+                id: 2, 
+                name: "Finalizar Projeto CRUD", 
+                category: "desafio", 
+                description: "Completar o projeto final do curso", 
+                priority: "alta",
+                dueDate: "2023-12-05"
+            },
+            { 
+                id: 3, 
+                name: "Revisar Documentação", 
+                category: "tarefa", 
+                description: "Revisar documentação do projeto", 
+                priority: "media",
+                dueDate: "2023-12-20"
+            }
         ];
 
         // Elementos do DOM
         const itemForm = document.getElementById('item-form');
         const itemList = document.getElementById('item-list');
         const searchInput = document.getElementById('search');
+        const userAvatar = document.getElementById('user-avatar');
+        const profileModal = document.getElementById('profile-modal');
+        const saveProfileBtn = document.getElementById('save-profile');
+        const closeModalBtn = document.getElementById('close-modal');
+        const xpBar = document.getElementById('xp-bar');
+        const colorOptions = document.querySelectorAll('.color-option');
 
-        // Função para renderizar a lista de itens
+        // Carregar configurações do usuário
+        const userSettings = JSON.parse(localStorage.getItem('userSettings')) || {
+            name: 'Vicente',
+            color: '#4ecca3',
+            email: ''
+        };
+
+        // Aplicar configurações do usuário
+        function applyUserSettings() {
+            userAvatar.textContent = userSettings.name.charAt(0);
+            userAvatar.style.background = userSettings.color;
+            document.documentElement.style.setProperty('--user-color', userSettings.color);
+            document.getElementById('user-name').value = userSettings.name;
+            document.getElementById('user-email').value = userSettings.email;
+            
+            // Selecionar a cor correta no modal
+            colorOptions.forEach(option => {
+                if (option.dataset.color === userSettings.color) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        // Inicializar a aplicação
+        function initApp() {
+            applyUserSettings();
+            renderItems();
+            updateXpBar();
+            
+            // Event Listeners
+            itemForm.addEventListener('submit', handleFormSubmit);
+            searchInput.addEventListener('input', handleSearch);
+            userAvatar.addEventListener('click', () => {
+                profileModal.style.display = 'flex';
+            });
+            
+            saveProfileBtn.addEventListener('click', saveUserSettings);
+            closeModalBtn.addEventListener('click', () => {
+                profileModal.style.display = 'none';
+            });
+            
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+            
+            // Fechar modal clicando fora
+            profileModal.addEventListener('click', (e) => {
+                if (e.target === profileModal) {
+                    profileModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Renderizar itens
         function renderItems(itemsToRender = items) {
             itemList.innerHTML = '';
+            
+            if (itemsToRender.length === 0) {
+                itemList.innerHTML = '<li class="no-items">Nenhum item encontrado</li>';
+                return;
+            }
             
             itemsToRender.forEach(item => {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <div class="item-info">
                         <strong>${item.name}</strong>
-                        <p>${translateCategory(item.category)} - Prioridade: ${translatePriority(item.priority)}</p>
+                        <p>${translateCategory(item.category)} - 
+                           <span class="priority-badge priority-${item.priority}">
+                               ${translatePriority(item.priority)}: ${getDueDateText(item.priority)}
+                           </span>
+                        </p>
+                        ${item.description ? `<small>${item.description}</small>` : ''}
                     </div>
                     <div class="item-actions">
                         <button class="btn-edit" onclick="editItem(${item.id})">Editar</button>
@@ -466,8 +663,17 @@
             return priorities[priority] || priority;
         }
 
-        // Adicionar novo item
-        itemForm.addEventListener('submit', function(e) {
+        function getDueDateText(priority) {
+            const dueDates = {
+                'baixa': 'Mais de 15 dias',
+                'media': '10-15 dias',
+                'alta': 'Menos de 10 dias'
+            };
+            return dueDates[priority] || '';
+        }
+
+        // Manipular envio do formulário
+        function handleFormSubmit(e) {
             e.preventDefault();
             
             const newItem = {
@@ -475,32 +681,65 @@
                 name: document.getElementById('name').value,
                 category: document.getElementById('category').value,
                 description: document.getElementById('description').value,
-                priority: document.getElementById('priority').value
+                priority: document.getElementById('priority').value,
+                dueDate: calculateDueDate(document.getElementById('priority').value)
             };
             
             items.push(newItem);
+            saveItems();
             renderItems();
             itemForm.reset();
             
+            // Notificação por email (simulação)
+            const email = document.getElementById('email-notification').value || userSettings.email;
+            if (email) {
+                simulateEmailNotification(email, newItem);
+            }
+            
             // Efeito visual de confirmação
-            const submitBtn = document.querySelector('.btn-primary');
-            submitBtn.textContent = 'Salvo com Sucesso!';
-            submitBtn.style.background = '#2b8c6b';
-            setTimeout(() => {
-                submitBtn.textContent = 'Salvar Item';
-                submitBtn.style.background = '';
-            }, 1500);
-        });
+            showNotification('Item salvo com sucesso!', 'success');
+        }
 
-        // Filtrar itens
-        searchInput.addEventListener('input', function() {
+        // Calcular data de vencimento
+        function calculateDueDate(priority) {
+            const today = new Date();
+            const dueDate = new Date();
+            
+            switch(priority) {
+                case 'alta':
+                    dueDate.setDate(today.getDate() + 7); // 7 dias
+                    break;
+                case 'media':
+                    dueDate.setDate(today.getDate() + 12); // 12 dias
+                    break;
+                case 'baixa':
+                    dueDate.setDate(today.getDate() + 20); // 20 dias
+                    break;
+                default:
+                    dueDate.setDate(today.getDate() + 14); // Padrão: 14 dias
+            }
+            
+            return dueDate.toISOString().split('T')[0];
+        }
+
+        // Simular notificação por email
+        function simulateEmailNotification(email, item) {
+            console.log(`Email enviado para: ${email}`);
+            console.log(`Assunto: Nova tarefa - ${item.name}`);
+            console.log(`Conteúdo: Você adicionou uma nova tarefa com prioridade ${translatePriority(item.priority)}. Prazo: ${getDueDateText(item.priority)}`);
+            
+            showNotification(`Notificação enviada para ${email}`, 'info');
+        }
+
+        // Manipular busca
+        function handleSearch() {
             const searchText = this.value.toLowerCase();
             const filteredItems = items.filter(item => 
                 item.name.toLowerCase().includes(searchText) || 
                 item.description.toLowerCase().includes(searchText)
             );
             renderItems(filteredItems);
-        });
+        }
 
         // Editar item
         window.editItem = function(id) {
@@ -512,21 +751,96 @@
                 document.getElementById('priority').value = item.priority;
                 
                 // Remover o item da lista para edição
-                items = items.filter(i => i.id !== id);
-                renderItems();
+                const index = items.findIndex(i => i.id === id);
+                if (index !== -1) {
+                    items.splice(index, 1);
+                    saveItems();
+                    renderItems();
+                }
             }
         };
 
         // Excluir item
         window.deleteItem = function(id) {
             if (confirm('Tem certeza que deseja excluir este item?')) {
-                items = items.filter(item => item.id !== id);
-                renderItems();
+                const index = items.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    items.splice(index, 1);
+                    saveItems();
+                    renderItems();
+                    showNotification('Item excluído com sucesso!', 'success');
+                }
             }
         };
 
-        // Inicializar a lista
-        renderItems();
+        // Salvar configurações do usuário
+        function saveUserSettings() {
+            userSettings.name = document.getElementById('user-name').value;
+            userSettings.email = document.getElementById('user-email').value;
+            
+            const selectedColor = document.querySelector('.color-option.selected');
+            if (selectedColor) {
+                userSettings.color = selectedColor.dataset.color;
+            }
+            
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+            applyUserSettings();
+            profileModal.style.display = 'none';
+            showNotification('Configurações salvas com sucesso!', 'success');
+        }
+
+        // Salvar itens no localStorage
+        function saveItems() {
+            localStorage.setItem('crudItems', JSON.stringify(items));
+        }
+
+        // Atualizar barra de XP
+        function updateXpBar() {
+            const xp = items.length * 10;
+            const xpPercentage = Math.min(100, (xp / 500) * 100);
+            xpBar.style.width = `${xpPercentage}%`;
+            
+            const pointsElement = document.querySelector('.points');
+            if (pointsElement) {
+                pointsElement.textContent = `${xp} XP`;
+            }
+        }
+
+        // Mostrar notificação
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '15px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.color = 'white';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
+            
+            if (type === 'success') {
+                notification.style.background = 'var(--secondary)';
+            } else if (type === 'error') {
+                notification.style.background = 'var(--danger)';
+            } else {
+                notification.style.background = 'var(--info)';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        // Inicializar a aplicação quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
+
