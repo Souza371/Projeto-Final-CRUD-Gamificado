@@ -257,3 +257,4 @@ function resetForm() {
 // Exportar funções para uso global (necessário para os eventos onclick no HTML)
 window.editItem = editItem;
 window.deleteItem = deleteItem;
+
